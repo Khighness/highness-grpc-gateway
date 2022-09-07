@@ -1,0 +1,24 @@
+syntax = "proto3";
+option go_package="proto/api/";
+
+import "google/api/annotations.proto";
+
+service HelloService{
+  // SayHello greets to a person.
+  rpc SayHello(HelloRequest) returns (HelloResponse) {
+    option (google.api.http) = {
+      post: "/v1/hello"
+      body: "*"
+    };
+  }
+}
+
+// HelloRequest defines the structure of a greet request.
+message HelloRequest {
+  string name = 1;
+}
+
+// HelloRequest defines the structure of a greet response.
+message HelloResponse {
+  string reply = 2;
+}
