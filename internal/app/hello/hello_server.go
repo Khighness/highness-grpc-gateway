@@ -2,6 +2,7 @@ package hello
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -24,6 +25,13 @@ func NewHelloServer() api.HelloServiceServer {
 }
 
 func (s *helloServer) SayHello(ctx context.Context, in *api.HelloRequest) (*api.HelloResponse, error) {
-	s.logger.Println("Greet to", in.Name)
-	return &api.HelloResponse{Reply: "Hi " + in.Name}, nil
+	fullName := fmt.Sprintf("%s %s", in.GetFirstName(), in.GetLastName())
+	s.logger.Println("Greet to", fullName)
+	return &api.HelloResponse{ReplyMessage: "Hi " + fullName}, nil
+}
+
+func (s *helloServer) SayHelloV2(ctx context.Context, in *api.HelloRequest) (*api.HelloResponse, error) {
+	fullName := fmt.Sprintf("%s %s", in.GetFirstName(), in.GetLastName())
+	s.logger.Println("Greet to", fullName)
+	return &api.HelloResponse{ReplyMessage: "Hi " + fullName}, nil
 }

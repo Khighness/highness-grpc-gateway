@@ -19,7 +19,7 @@ Generate model.pb, grpc.pb, grpc-gateway.pb
 $ protoc -I=. \
     --go_out=.  \
     --go-grpc_out=.  \
-    --hello-gateway_out=. \
+    --grpc-gateway_out=. \
     ./proto/api/hello.proto
 ```
 
@@ -41,12 +41,12 @@ $ cd ../../
 $ goreman start
 15:33:46 grpc-service | Starting grpc-service on port 5000
 15:33:46 grpc-gateway | Starting grpc-gateway on port 5100
-15:33:46 grpc-service | [GRPC] 2022/09/07 15:33:46.790663 main.go:36: GRPC service is serving at 0.0.0.0:10010
+15:33:46 grpc-service | [SERVICE] 2022/09/07 16:59:34.168711 main.go:36: GRPC service is serving at 0.0.0.0:10010
 15:33:46 grpc-gateway | [GATEWAY] 2022/09/07 15:33:46.807039 main.go:46: GRPC gateway is serving at 0.0.0.0:10020
 ```
 
 CURL Test:
 ```shell
-$ curl -X POST http://127.0.0.1:10020/v1/hello -d '{"name":"KHighness"}'
-{"reply":"Hi KHighness"}                      
+$ curl -X GET 'http://127.0.0.1:10020/v1/hello?first_name=K&last_name=Highness' 
+$ curl -X POST 'http://127.0.0.1:10020/v2/hello' -d '{"first_name":"K", "last_name":"Highness"}'                                
 ```

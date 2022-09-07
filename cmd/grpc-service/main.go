@@ -17,7 +17,7 @@ import (
 // @Email  zikang.chen@shopee.com
 // @Since  2022-09-07
 
-var logger = log.New(os.Stdout, "[GRPC] ", log.Flags()|log.Lmicroseconds|log.Lshortfile)
+var logger = log.New(os.Stdout, "[SERVICE] ", log.Flags()|log.Lmicroseconds|log.Lshortfile)
 
 func main() {
 	// create tcp listener
