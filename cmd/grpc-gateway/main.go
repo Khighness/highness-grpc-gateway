@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"go.uber.org/zap/zapcore"
+	"highness-grpc-gateway/internal/app/middleware"
+	toolkit2 "highness-grpc-gateway/internal/app/toolkit"
 	"highness-grpc-gateway/internal/pkg/logging"
 	"log"
 	"net/http"
@@ -13,10 +15,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"highness-grpc-gateway/internal/pkg/middleware"
-
 	"highness-grpc-gateway/config"
-	"highness-grpc-gateway/internal/pkg/toolkit"
 	"highness-grpc-gateway/proto/api"
 )
 
@@ -40,10 +39,10 @@ func main() {
 
 	// create http mux
 	gatewayMux := runtime.NewServeMux(
-		runtime.WithMetadata(toolkit.RequestMetaHandler),
-		runtime.WithRoutingErrorHandler(toolkit.ErrorRoutingHandler),
-		runtime.WithForwardResponseOption(toolkit.CookieFilter),
-		runtime.WithForwardResponseOption(toolkit.TracingFilter),
+		runtime.WithMetadata(toolkit2.RequestMetaHandler),
+		runtime.WithRoutingErrorHandler(toolkit2.ErrorRoutingHandler),
+		runtime.WithForwardResponseOption(toolkit2.CookieFilter),
+		runtime.WithForwardResponseOption(toolkit2.TracingFilter),
 	)
 	handler := middleware.WithMiddleWares(gatewayMux, middleware.Middlewares()...)
 
