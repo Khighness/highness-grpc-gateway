@@ -60,6 +60,6 @@ func main() {
 	}
 	zap.L().Info("GRPC gateway is serving at " + gatewayAddr)
 	if err = httpServer.ListenAndServe(); err != nil {
-		zap.L().Fatal("Failed to dial grpc gateway ", zap.Error(err))
+		zap.L().Fatal("Failed to start grpc gateway ", zap.Error(err))
 	}
 }
