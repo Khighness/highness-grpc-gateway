@@ -31,7 +31,6 @@ func Logging(writer http.ResponseWriter, request *http.Request, next func(http.R
 	if rw, ok := writer.(*ResponseWriter); ok {
 		statusCode = rw.StatusCode()
 	}
-
 	logger.Sugar().With("headers", headers).Infof(
 		"[MIDDLEWARE-Logging] %3d | %13v | %15s | %-7s %s",
 		statusCode,

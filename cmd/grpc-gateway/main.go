@@ -43,6 +43,7 @@ func main() {
 		runtime.WithMetadata(toolkit.RequestMetaHandler),
 		runtime.WithRoutingErrorHandler(toolkit.ErrorRoutingHandler),
 		runtime.WithForwardResponseOption(toolkit.CookieFilter),
+		runtime.WithForwardResponseOption(toolkit.TracingFilter),
 	)
 	handler := middleware.WithMiddleWares(gatewayMux, middleware.Middlewares()...)
 
