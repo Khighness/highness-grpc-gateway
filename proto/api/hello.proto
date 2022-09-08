@@ -18,6 +18,18 @@ service HelloService{
       body: "*"
     };
   }
+
+  // SayGoodBye  to a person v2.
+  rpc SayGoodBye(ByeRequest) returns (ByeResponse) {
+    option (google.api.http) = {
+      post: "/v2/bye"
+      body: "*"
+    };
+  }
+}
+
+message BaseResponse {
+  int32 code = 1;
 }
 
 // HelloRequest defines the structure of a greet request.
@@ -29,5 +41,19 @@ message HelloRequest {
 
 // HelloRequest defines the structure of a greet response.
 message HelloResponse {
-  string reply_message = 1;
+  int32 code = 1;
+  string reply_message = 2;
+}
+
+// ByeRequest defines the structure of a goodbye request.
+message ByeRequest {
+  string first_name = 1;
+  string last_name = 2;
+  int64 timestamp = 3;
+}
+
+// ByeRequest defines the structure of a goodbye request.
+message ByeResponse {
+  int32 code = 1;
+  string reply_message = 2;
 }

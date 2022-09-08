@@ -11,6 +11,13 @@ import (
 
 type Middleware func(http.ResponseWriter, *http.Request, func(http.ResponseWriter, *http.Request))
 
+func Middlewares() []Middleware {
+	return []Middleware{
+		Logging,
+		Recovery,
+	}
+}
+
 func WithMiddleWares(base http.Handler, middlewares ...Middleware) (handler http.Handler) {
 	handler = base
 	for i := len(middlewares) - 1; i >= 0; i-- {

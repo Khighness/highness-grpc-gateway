@@ -6,7 +6,10 @@ import (
 	"net"
 	"os"
 
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc"
+	"highness-grpc-gateway/internal/pkg/logging"
 
 	"highness-grpc-gateway/config"
 	"highness-grpc-gateway/internal/app/hello"
@@ -20,11 +23,14 @@ import (
 var logger = log.New(os.Stdout, "[SERVICE] ", log.Flags()|log.Lmicroseconds|log.Lshortfile)
 
 func main() {
+	// init zap logger
+	logging.InitLogger(zapcore.DebugLevel)
+
 	// create tcp listener
 	addr := fmt.Sprintf("0.0.0.0:%d", *config.GRPC_PORT)
 	listener, err := net.Listen("tcp", addr)
 	if err != nil {
-		logger.Fatalln("Failed to listen:", err)
+		zap.L().Fatal("Failed to listen:", zap.Error(err))
 	}
 
 	// create grpc server
@@ -33,8 +39,8 @@ func main() {
 	api.RegisterHelloServiceServer(server, helloServer)
 
 	// start grpc server
-	logger.Println("GRPC service is serving at", addr)
+	zap.L().Info("GRPC service is serving at " + addr)
 	if err = server.Serve(listener); err != nil {
-		logger.Fatalln("Failed to start:", err)
+		zap.L().Fatal("Failed to start grpc service", zap.Error(err))
 	}
 }

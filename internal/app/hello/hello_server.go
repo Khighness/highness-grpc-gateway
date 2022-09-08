@@ -3,8 +3,7 @@ package hello
 import (
 	"context"
 	"fmt"
-	"log"
-	"os"
+	"go.uber.org/zap"
 	"time"
 
 	"highness-grpc-gateway/proto/api"
@@ -15,26 +14,31 @@ import (
 // @Since  2022-09-07
 
 type helloServer struct {
-	logger *log.Logger
 	api.HelloServiceServer
 }
 
 func NewHelloServer() api.HelloServiceServer {
-	return &helloServer{
-		logger: log.New(os.Stdout, "[GRPC] ", log.Flags()|log.Lmicroseconds|log.Lshortfile),
-	}
+	return &helloServer{}
 }
 
 func (s *helloServer) SayHello(ctx context.Context, in *api.HelloRequest) (*api.HelloResponse, error) {
 	fullName := fmt.Sprintf("%s·%s", in.GetFirstName(), in.GetLastName())
-	s.logger.Println("Greet to", fullName)
+	zap.L().Info("[SayHello]", zap.String("name", fullName))
 	return &api.HelloResponse{ReplyMessage: fmt.Sprintf("%s好, %s", s.GetPeriod(in.GetTimestamp()), fullName)}, nil
 }
 
 func (s *helloServer) SayHelloV2(ctx context.Context, in *api.HelloRequest) (*api.HelloResponse, error) {
-	fullName := fmt.Sprintf("%s %s", in.GetFirstName(), in.GetLastName())
-	s.logger.Println("Greet to", fullName)
+	fullName := fmt.Sprintf("%s·%s", in.GetFirstName(), in.GetLastName())
+	zap.L().Info("[SayHelloV2]", zap.String("name", fullName))
 	return &api.HelloResponse{ReplyMessage: fmt.Sprintf("%s好, %s", s.GetPeriod(in.GetTimestamp()), fullName)}, nil
+}
+
+func (s *helloServer) SayGoodBye(ctx context.Context, in *api.ByeRequest) (*api.ByeResponse, error) {
+	fullName := fmt.Sprintf("%s·%s", in.GetFirstName(), in.GetLastName())
+	zap.L().Info("[SayGoodBye]", zap.String("name", fullName))
+	return &api.ByeResponse{
+		ReplyMessage: fmt.Sprintf("再见, %s。 于%s", fullName, time.Unix(in.GetTimestamp(), 0)),
+	}, nil
 }
 
 func (s *helloServer) GetPeriod(timestamp int64) string {

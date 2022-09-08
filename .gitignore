@@ -23,3 +23,7 @@ grpc-gateway-application
 
 # MacOS
 .DS_Store
+
+# Log
+/log
+*.log

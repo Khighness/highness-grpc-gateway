@@ -26,6 +26,8 @@ type HelloServiceClient interface {
 	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloResponse, error)
 	// SayHello greets to a person v2.
 	SayHelloV2(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloResponse, error)
+	// SayGoodBye  to a person v2.
+	SayGoodBye(ctx context.Context, in *ByeRequest, opts ...grpc.CallOption) (*ByeResponse, error)
 }
 
 type helloServiceClient struct {
@@ -54,6 +56,15 @@ func (c *helloServiceClient) SayHelloV2(ctx context.Context, in *HelloRequest, o
 	return out, nil
 }
 
+func (c *helloServiceClient) SayGoodBye(ctx context.Context, in *ByeRequest, opts ...grpc.CallOption) (*ByeResponse, error) {
+	out := new(ByeResponse)
+	err := c.cc.Invoke(ctx, "/HelloService/SayGoodBye", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // HelloServiceServer is the server API for HelloService service.
 // All implementations must embed UnimplementedHelloServiceServer
 // for forward compatibility
@@ -62,6 +73,8 @@ type HelloServiceServer interface {
 	SayHello(context.Context, *HelloRequest) (*HelloResponse, error)
 	// SayHello greets to a person v2.
 	SayHelloV2(context.Context, *HelloRequest) (*HelloResponse, error)
+	// SayGoodBye  to a person v2.
+	SayGoodBye(context.Context, *ByeRequest) (*ByeResponse, error)
 	mustEmbedUnimplementedHelloServiceServer()
 }
 
@@ -74,6 +87,9 @@ func (UnimplementedHelloServiceServer) SayHello(context.Context, *HelloRequest) 
 }
 func (UnimplementedHelloServiceServer) SayHelloV2(context.Context, *HelloRequest) (*HelloResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SayHelloV2 not implemented")
+}
+func (UnimplementedHelloServiceServer) SayGoodBye(context.Context, *ByeRequest) (*ByeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SayGoodBye not implemented")
 }
 func (UnimplementedHelloServiceServer) mustEmbedUnimplementedHelloServiceServer() {}
 
@@ -124,6 +140,24 @@ func _HelloService_SayHelloV2_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _HelloService_SayGoodBye_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ByeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HelloServiceServer).SayGoodBye(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/HelloService/SayGoodBye",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HelloServiceServer).SayGoodBye(ctx, req.(*ByeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // HelloService_ServiceDesc is the grpc.ServiceDesc for HelloService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -138,6 +172,10 @@ var HelloService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SayHelloV2",
 			Handler:    _HelloService_SayHelloV2_Handler,
+		},
+		{
+			MethodName: "SayGoodBye",
+			Handler:    _HelloService_SayGoodBye_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

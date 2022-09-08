@@ -3,15 +3,20 @@ package main
 import (
 	"context"
 	"fmt"
+	"go.uber.org/zap/zapcore"
+	"highness-grpc-gateway/internal/pkg/logging"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"highness-grpc-gateway/internal/pkg/middleware"
 
 	"highness-grpc-gateway/config"
+	"highness-grpc-gateway/internal/pkg/grpc_handler"
 	"highness-grpc-gateway/proto/api"
 )
 
@@ -22,29 +27,39 @@ import (
 var logger = log.New(os.Stdout, "[GATEWAY] ", log.Flags()|log.Lmicroseconds|log.Lshortfile)
 
 func main() {
+	// init zap logger
+	logging.InitLogger(zapcore.DebugLevel)
+
 	// dial to grpc service
 	grpcAddr := fmt.Sprintf("0.0.0.0:%d", *config.GRPC_PORT)
 	conn, err := grpc.DialContext(context.Background(), grpcAddr,
 		grpc.WithBlock(), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		logger.Fatalln("Failed to dial grpc service:", err)
+		zap.L().Fatal("Failed to dial grpc service ", zap.Error(err))
 	}
 
+	// create http mux
+	gatewayMux := runtime.NewServeMux(
+		runtime.WithMetadata(grpc_handler.RequestMetaHandler),
+		runtime.WithRoutingErrorHandler(grpc_handler.ErrorRoutingHandler),
+		runtime.WithForwardResponseOption(grpc_handler.CookieFilter),
+	)
+	handler := middleware.WithMiddleWares(gatewayMux, middleware.Middlewares()...)
+
 	// register service into gateway mux
-	gatewayMux := runtime.NewServeMux()
 	err = api.RegisterHelloServiceHandler(context.Background(), gatewayMux, conn)
 	if err != nil {
-		logger.Fatalln("Failed to register service into gateway:", err)
+		zap.L().Fatal("Failed to register service into gateway", zap.Error(err))
 	}
 
 	// start grpc gateway by http service
 	gatewayAddr := fmt.Sprintf("0.0.0.0:%d", *config.GATEWAY_PORT)
 	httpServer := &http.Server{
 		Addr:    gatewayAddr,
-		Handler: gatewayMux,
+		Handler: handler,
 	}
-	logger.Println("GRPC gateway is serving at", gatewayAddr)
+	zap.L().Info("GRPC gateway is serving at " + gatewayAddr)
 	if err = httpServer.ListenAndServe(); err != nil {
-		logger.Fatalln("Failed to start grpc gateway:", err)
+		zap.L().Fatal("Failed to dial grpc gateway ", zap.Error(err))
 	}
 }
