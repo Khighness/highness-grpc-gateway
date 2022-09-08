@@ -39,10 +39,10 @@ $ cd ../../
 
 ```shell
 $ goreman start
-15:33:46 grpc-service | Starting grpc-service on port 5000
-15:33:46 grpc-gateway | Starting grpc-gateway on port 5100
-15:33:46 grpc-service | [SERVICE] 2022/09/07 16:59:34.168711 main.go:36: GRPC service is serving at 0.0.0.0:10010
-15:33:46 grpc-gateway | [GATEWAY] 2022/09/07 15:33:46.807039 main.go:46: GRPC gateway is serving at 0.0.0.0:10020
+20:27:42 grpc-service | Starting grpc-service on port 5000
+20:27:42 grpc-gateway | Starting grpc-gateway on port 5100
+20:27:42 grpc-service | 2022-09-08T20:27:42.702+0800 [INFO] grpc-service/main.go:42 GRPC service is serving at 0.0.0.0:10010
+20:27:42 grpc-gateway | 2022-09-08T20:27:42.727+0800 [INFO] grpc-gateway/main.go:61 GRPC gateway is serving at 0.0.0.0:10020
 ```
 
 CURL Test:

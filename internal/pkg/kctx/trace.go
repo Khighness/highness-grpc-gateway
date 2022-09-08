@@ -25,5 +25,5 @@ func GetTraceID(ctx context.Context) string {
 
 // GenerateTraceId generates traceID.
 func GenerateTraceId() string {
-	return random.RandString(10) + "-" + random.RandString(10)
+	return random.RandString(10)
 }
