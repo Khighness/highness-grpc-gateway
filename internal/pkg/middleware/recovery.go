@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
+	"highness-grpc-gateway/internal/pkg/kctx"
 )
 
 // @Author Chen Zikang
@@ -15,9 +15,10 @@ import (
 
 func Recovery(writer http.ResponseWriter, request *http.Request, next func(http.ResponseWriter, *http.Request)) {
 	defer func() {
-		zap.L().Info("[MIDDLEWARE-Recovery]")
+		logger := kctx.GetLogger(request.Context())
+		logger.Info("[MIDDLEWARE-Recovery]")
 		if p := recover(); p != nil {
-			ctxzap.Extract(request.Context()).Error("recovery", zap.Error(fmt.Errorf("%v", p)))
+			logger.Error("[MIDDLEWARE-Recovery]", zap.Error(fmt.Errorf("%v", p)))
 			writer.Header().Set("Content-Type", "application/json")
 			writer.WriteHeader(http.StatusInternalServerError)
 			b, _ := json.Marshal(map[string]interface{}{

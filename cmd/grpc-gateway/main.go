@@ -16,7 +16,7 @@ import (
 	"highness-grpc-gateway/internal/pkg/middleware"
 
 	"highness-grpc-gateway/config"
-	"highness-grpc-gateway/internal/pkg/grpc_handler"
+	"highness-grpc-gateway/internal/pkg/toolkit"
 	"highness-grpc-gateway/proto/api"
 )
 
@@ -40,9 +40,9 @@ func main() {
 
 	// create http mux
 	gatewayMux := runtime.NewServeMux(
-		runtime.WithMetadata(grpc_handler.RequestMetaHandler),
-		runtime.WithRoutingErrorHandler(grpc_handler.ErrorRoutingHandler),
-		runtime.WithForwardResponseOption(grpc_handler.CookieFilter),
+		runtime.WithMetadata(toolkit.RequestMetaHandler),
+		runtime.WithRoutingErrorHandler(toolkit.ErrorRoutingHandler),
+		runtime.WithForwardResponseOption(toolkit.CookieFilter),
 	)
 	handler := middleware.WithMiddleWares(gatewayMux, middleware.Middlewares()...)
 

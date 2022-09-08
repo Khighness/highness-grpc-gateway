@@ -1,4 +1,4 @@
-package grpc_handler
+package toolkit
 
 import (
 	"context"
@@ -47,6 +47,7 @@ func NewHighnessCookie(cookie string) *http.Cookie {
 	}
 }
 
+// CookieFilter sets cookie before sending http response.
 func CookieFilter(ctx context.Context, w http.ResponseWriter, resp proto.Message) error {
 	if resp.ProtoReflect().Type().Descriptor().FullName() == "HelloResponse" {
 		cookieStr := fmt.Sprintf("highness-%d", time.Now().Unix())

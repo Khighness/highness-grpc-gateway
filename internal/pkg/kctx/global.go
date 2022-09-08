@@ -1,0 +1,20 @@
+package kctx
+
+import (
+	"context"
+
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+)
+
+// @Author Chen Zikang
+// @Email  zikang.chen@shopee.com
+// @Since  2022-09-08
+
+func GetLogger(ctx context.Context) *zap.Logger {
+	return zap.L().With(zap.Field{
+		Key:    TraceID,
+		Type:   zapcore.StringType,
+		String: GetTraceID(ctx),
+	})
+}

@@ -1,7 +1,8 @@
-package grpc_handler
+package toolkit
 
 import (
 	"context"
+	"highness-grpc-gateway/internal/pkg/kctx"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -13,8 +14,7 @@ import (
 // @Since  2022-09-08
 
 func RequestMetaHandler(ctx context.Context, request *http.Request) metadata.MD {
-
-	zap.L().Info("[GRPC-RequestMetaHandler]",
+	kctx.GetLogger(request.Context()).Info("[GRPC-RequestMetaHandler]",
 		zap.String("http-method", request.Method),
 		zap.String("http-url", request.URL.String()),
 		zap.String("http-param", request.URL.Query().Encode()),

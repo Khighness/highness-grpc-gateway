@@ -13,6 +13,7 @@ type Middleware func(http.ResponseWriter, *http.Request, func(http.ResponseWrite
 
 func Middlewares() []Middleware {
 	return []Middleware{
+		Opentracing,
 		Logging,
 		Recovery,
 	}

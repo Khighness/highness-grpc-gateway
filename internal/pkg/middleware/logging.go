@@ -1,10 +1,11 @@
 package middleware
 
 import (
-	"go.uber.org/zap"
 	"net"
 	"net/http"
 	"time"
+
+	"highness-grpc-gateway/internal/pkg/kctx"
 )
 
 // @Author Chen Zikang
@@ -12,6 +13,7 @@ import (
 // @Since  2022-09-08
 
 func Logging(writer http.ResponseWriter, request *http.Request, next func(http.ResponseWriter, *http.Request)) {
+	logger := kctx.GetLogger(request.Context())
 	start := time.Now()
 	method := request.Method
 	url := request.URL.String()
@@ -29,7 +31,8 @@ func Logging(writer http.ResponseWriter, request *http.Request, next func(http.R
 	if rw, ok := writer.(*ResponseWriter); ok {
 		statusCode = rw.StatusCode()
 	}
-	zap.L().Sugar().With("headers", headers).Infof(
+
+	logger.Sugar().With("headers", headers).Infof(
 		"[MIDDLEWARE-Logging] %3d | %13v | %15s | %-7s %s",
 		statusCode,
 		latency,
