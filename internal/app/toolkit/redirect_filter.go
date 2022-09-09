@@ -2,12 +2,13 @@ package toolkit
 
 import (
 	"context"
+	"net/http"
+	"strings"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/proto"
-	"net/http"
-	"strings"
 
 	"highness-grpc-gateway/internal/pkg/httputil"
 	"highness-grpc-gateway/internal/pkg/kctx"
