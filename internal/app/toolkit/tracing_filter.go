@@ -6,6 +6,8 @@ import (
 
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/proto"
+
+	"highness-grpc-gateway/internal/pkg/kctx"
 )
 
 // @Author Chen Zikang
@@ -15,12 +17,12 @@ import (
 // TracingFilter sets cookie before sending http response.
 func TracingFilter(ctx context.Context, w http.ResponseWriter, resp proto.Message) error {
 	metaData, _ := metadata.FromOutgoingContext(ctx)
-	w.Header().Set("X-Trace-Id", getTraceID(metaData))
+	w.Header().Set(kctx.TraceID, getTraceID(metaData))
 	return nil
 }
 
 func getTraceID(md metadata.MD) string {
-	if val := md.Get("trace-id"); len(val) > 0 {
+	if val := md.Get(kctx.TraceID); len(val) > 0 {
 		return val[0]
 	}
 	return ""

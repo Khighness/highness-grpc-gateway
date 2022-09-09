@@ -6,5 +6,8 @@ package kctx
 
 const (
 	DefaultValue = ""
-	TraceID      = "trace_id"
+	TraceID      = "x-trace-id"
+	HttpMethod   = "http-method"
+	HttpUrl      = "http-url"
+	HttpParam    = "http-param"
 )

@@ -7,7 +7,11 @@ import (
 	"time"
 
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/proto"
+
+	"highness-grpc-gateway/internal/pkg/kctx"
 )
 
 // @Author Chen Zikang
@@ -50,11 +54,20 @@ func NewHighnessCookie(cookie string) *http.Cookie {
 // CookieFilter sets cookie before sending http response.
 func CookieFilter(ctx context.Context, w http.ResponseWriter, resp proto.Message) error {
 	if resp.ProtoReflect().Type().Descriptor().FullName() == "HelloResponse" {
+		metaData, _ := metadata.FromOutgoingContext(ctx)
+		logger := zap.L().With(zap.Field{
+			Key:    kctx.TraceID,
+			Type:   zapcore.StringType,
+			String: getTraceID(metaData),
+		})
+
 		cookieStr := fmt.Sprintf("highness-%d", time.Now().Unix())
 		http.SetCookie(w, NewHighnessCookie(cookieStr))
-		zap.L().Info("[GRPC-CookieFilter] Set",
-			zap.String("cookie_key", cookieKey),
-			zap.String("cookie_value", cookieStr))
+
+		logger.Info("[GRPC-CookieFilter] Set",
+			zap.String(kctx.TraceID, getTraceID(metaData)),
+			zap.String("cookie-key", cookieKey),
+			zap.String("cookie-value", cookieStr))
 	}
 	return nil
 }

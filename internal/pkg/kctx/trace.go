@@ -2,6 +2,7 @@ package kctx
 
 import (
 	"context"
+
 	"highness-grpc-gateway/internal/pkg/random"
 )
 
@@ -14,7 +15,7 @@ func SetTraceID(ctx context.Context, traceID string) context.Context {
 	return context.WithValue(ctx, TraceID, traceID)
 }
 
-// GetTraceID gets traceID into ctx.
+// GetTraceID gets traceID from ctx.
 func GetTraceID(ctx context.Context) string {
 	traceID, ok := ctx.Value(TraceID).(string)
 	if !ok {

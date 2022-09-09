@@ -15,9 +15,9 @@ import (
 
 func RequestMetaHandler(ctx context.Context, request *http.Request) metadata.MD {
 	return metadata.New(map[string]string{
-		"http-method": request.Method,
-		"http-url":    request.URL.String(),
-		"http-param":  request.URL.Query().Encode(),
-		"trace-id":    kctx.GetTraceID(request.Context()),
+		kctx.HttpMethod: request.Method,
+		kctx.HttpUrl:    request.URL.String(),
+		kctx.HttpParam:  request.URL.Query().Encode(),
+		kctx.TraceID:    kctx.GetTraceID(request.Context()),
 	})
 }

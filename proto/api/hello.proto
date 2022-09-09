@@ -11,18 +11,17 @@ service HelloService{
     };
   }
 
+  // SayGoodBye leaves a person.
+  rpc SayGoodBye(ByeRequest) returns (ByeResponse) {
+    option (google.api.http) = {
+      get: "/v1/bye/{first_name}/{last_name}"
+    };
+  }
+
   // SayHello greets to a person v2.
   rpc SayHelloV2(HelloRequest) returns (HelloResponse) {
     option (google.api.http) = {
       post: "/v2/hello"
-      body: "*"
-    };
-  }
-
-  // SayGoodBye  to a person v2.
-  rpc SayGoodBye(ByeRequest) returns (ByeResponse) {
-    option (google.api.http) = {
-      post: "/v2/bye"
       body: "*"
     };
   }
