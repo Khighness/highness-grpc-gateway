@@ -35,10 +35,3 @@ func RedirectFilter(ctx context.Context, w http.ResponseWriter, resp proto.Messa
 	}
 	return nil
 }
-
-func getHttpUrl(md metadata.MD) string {
-	if val := md.Get(kctx.HttpUrl); len(val) > 0 {
-		return val[0]
-	}
-	return ""
-}

@@ -20,10 +20,3 @@ func TracingFilter(ctx context.Context, w http.ResponseWriter, resp proto.Messag
 	w.Header().Set(kctx.TraceID, getTraceID(metaData))
 	return nil
 }
-
-func getTraceID(md metadata.MD) string {
-	if val := md.Get(kctx.TraceID); len(val) > 0 {
-		return val[0]
-	}
-	return ""
-}

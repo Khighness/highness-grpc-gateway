@@ -65,7 +65,6 @@ func CookieFilter(ctx context.Context, w http.ResponseWriter, resp proto.Message
 		http.SetCookie(w, NewHighnessCookie(cookieStr))
 
 		logger.Info("[GRPC-CookieFilter] Set",
-			zap.String(kctx.TraceID, getTraceID(metaData)),
 			zap.String("cookie-key", cookieKey),
 			zap.String("cookie-value", cookieStr))
 	}

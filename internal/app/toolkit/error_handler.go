@@ -16,7 +16,7 @@ import (
 
 func ErrorRoutingHandler(ctx context.Context, mux *runtime.ServeMux, marshaler runtime.Marshaler, w http.ResponseWriter, r *http.Request, httpStatus int) {
 	kctx.GetLogger(r.Context()).Warn("[GRPC-ErrorRoutingHandler]",
-		zap.String("http_method", r.Method),
-		zap.String("http_path", r.URL.String()))
+		zap.String(kctx.HttpMethod, r.Method),
+		zap.String(kctx.HttpUrl, r.URL.String()))
 	runtime.DefaultRoutingErrorHandler(ctx, mux, marshaler, w, r, httpStatus)
 }
