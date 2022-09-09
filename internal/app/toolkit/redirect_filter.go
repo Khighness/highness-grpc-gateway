@@ -22,12 +22,12 @@ import (
 func RedirectFilter(ctx context.Context, w http.ResponseWriter, resp proto.Message) error {
 	metaData, _ := metadata.FromOutgoingContext(ctx)
 	logger := zap.L().With(zap.Field{
-		Key:    kctx.TraceID,
+		Key:    kctx.MetaTraceID,
 		Type:   zapcore.StringType,
-		String: getTraceID(metaData),
+		String: GetTraceID(metaData),
 	})
 
-	url := getHttpUrl(metaData)
+	url := GetHttpUrl(metaData)
 	if strings.HasPrefix(url, "/v1/hello") {
 		url = strings.ReplaceAll(url, "hello", "bye")
 		logger.Info("Redirect:", zap.String("url", url))

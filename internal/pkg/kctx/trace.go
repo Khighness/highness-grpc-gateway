@@ -12,12 +12,12 @@ import (
 
 // SetTraceID sets traceID into ctx.
 func SetTraceID(ctx context.Context, traceID string) context.Context {
-	return context.WithValue(ctx, TraceID, traceID)
+	return context.WithValue(ctx, MetaTraceID, traceID)
 }
 
 // GetTraceID gets traceID from ctx.
 func GetTraceID(ctx context.Context) string {
-	traceID, ok := ctx.Value(TraceID).(string)
+	traceID, ok := ctx.Value(MetaTraceID).(string)
 	if !ok {
 		return DefaultValue
 	}

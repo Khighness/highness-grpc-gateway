@@ -13,7 +13,7 @@ import (
 
 func GetLogger(ctx context.Context) *zap.Logger {
 	return zap.L().With(zap.Field{
-		Key:    TraceID,
+		Key:    MetaTraceID,
 		Type:   zapcore.StringType,
 		String: GetTraceID(ctx),
 	})

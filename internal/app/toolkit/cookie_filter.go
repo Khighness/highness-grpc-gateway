@@ -56,9 +56,9 @@ func CookieFilter(ctx context.Context, w http.ResponseWriter, resp proto.Message
 	if resp.ProtoReflect().Type().Descriptor().FullName() == "HelloResponse" {
 		metaData, _ := metadata.FromOutgoingContext(ctx)
 		logger := zap.L().With(zap.Field{
-			Key:    kctx.TraceID,
+			Key:    kctx.MetaTraceID,
 			Type:   zapcore.StringType,
-			String: getTraceID(metaData),
+			String: GetTraceID(metaData),
 		})
 
 		cookieStr := fmt.Sprintf("highness-%d", time.Now().Unix())

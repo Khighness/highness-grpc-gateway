@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"highness-grpc-gateway/internal/app/kgrpc"
 	"log"
 	"net"
 	"os"
@@ -34,7 +35,7 @@ func main() {
 	}
 
 	// create grpc server
-	server := grpc.NewServer()
+	server := grpc.NewServer(grpc.UnaryInterceptor(kgrpc.MetaServerInterceptor))
 	helloServer := hello.NewHelloServer()
 	api.RegisterHelloServiceServer(server, helloServer)
 

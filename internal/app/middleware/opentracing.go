@@ -16,6 +16,6 @@ func Opentracing(writer http.ResponseWriter, request *http.Request, next func(ht
 	traceID := kctx.GenerateTraceId()
 	request = request.WithContext(kctx.SetTraceID(request.Context(), traceID))
 	zap.L().Info("[MIDDLEWARE-Tracing]",
-		zap.String(kctx.TraceID, kctx.GetTraceID(request.Context())))
+		zap.String(kctx.MetaTraceID, kctx.GetTraceID(request.Context())))
 	next(writer, request)
 }

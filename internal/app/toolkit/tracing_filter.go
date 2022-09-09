@@ -17,6 +17,6 @@ import (
 // TracingFilter sets cookie before sending http response.
 func TracingFilter(ctx context.Context, w http.ResponseWriter, resp proto.Message) error {
 	metaData, _ := metadata.FromOutgoingContext(ctx)
-	w.Header().Set(kctx.TraceID, getTraceID(metaData))
+	w.Header().Set(kctx.MetaTraceID, GetTraceID(metaData))
 	return nil
 }
