@@ -15,7 +15,7 @@ import (
 )
 
 // @Author Chen Zikang
-// @Email  zikang.chen@shopee.com
+// @Email  parakovo@gmail.com
 // @Since  2022-09-08
 
 // ErrorRoutingHandler will response status.Error directly by runtime.DefaultRoutingErrorHandler.

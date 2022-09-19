@@ -3,7 +3,7 @@ package config
 import "flag"
 
 // @Author Chen Zikang
-// @Email  zikang.chen@shopee.com
+// @Email  parakovo@gmail.com
 // @Since  2022-09-07
 
 var (

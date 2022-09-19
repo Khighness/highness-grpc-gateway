@@ -6,7 +6,7 @@ import (
 )
 
 // @Author Chen Zikang
-// @Email  zikang.chen@shopee.com
+// @Email  parakovo@gmail.com
 // @Since  2022-09-07
 
 type Middleware func(http.ResponseWriter, *http.Request, func(http.ResponseWriter, *http.Request))

@@ -21,7 +21,7 @@ import (
 )
 
 // @Author Chen Zikang
-// @Email  zikang.chen@shopee.com
+// @Email  parakovo@gmail.com
 // @Since  2022-09-07
 
 var logger = log.New(os.Stdout, "[GATEWAY] ", log.Flags()|log.Lmicroseconds|log.Lshortfile)

@@ -11,7 +11,7 @@ import (
 )
 
 // @Author Chen Zikang
-// @Email  zikang.chen@shopee.com
+// @Email  parakovo@gmail.com
 // @Since  2022-09-08
 
 // TracingFilter sets cookie before sending http response.

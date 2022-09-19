@@ -9,7 +9,7 @@ import (
 )
 
 // @Author Chen Zikang
-// @Email  zikang.chen@shopee.com
+// @Email  parakovo@gmail.com
 // @Since  2022-09-08
 
 func Opentracing(writer http.ResponseWriter, request *http.Request, next func(http.ResponseWriter, *http.Request)) {

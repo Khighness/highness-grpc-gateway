@@ -3,7 +3,7 @@ package gerror
 import "google.golang.org/grpc/status"
 
 // @Author Chen Zikang
-// @Email  zikang.chen@shopee.com
+// @Email  parakovo@gmail.com
 // @Since  2022-09-11
 
 // Error defines the structure of error for grpc gateway.
