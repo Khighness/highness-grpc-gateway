@@ -51,3 +51,11 @@ $ curl -X GET 'http://127.0.0.1:10020/v1/hello/K/Highness?timestamp=1662551788'
 $ curl -X GET 'http://127.0.0.1:10020/v1/bye/K/Highness?timestamp=1662551788'
 $ curl -X POST 'http://127.0.0.1:10020/v2/hello' -d '{"first_name":"K", "last_name":"Highness", "timestamp":1662551788}'                                
 ```
+
+```shell
+$ protoc -I=. \
+    --go_out=.  \
+    --go-grpc_out=.  \
+    --grpc-gateway_out=. \
+    ./api/oauth_login.proto
+```

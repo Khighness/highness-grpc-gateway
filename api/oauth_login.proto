@@ -1,0 +1,185 @@
+syntax = "proto3";
+option go_package="api/";
+
+import "google/api/annotations.proto";
+
+// OSAuthLoginService defines the functions related to scan code login service of SeaTalk official site.
+service OSOAuthLoginService {
+
+  // Ping checks connectivity between portal gateway and grpc service.
+  rpc Ping(PingRequest) returns (PongResponse) {
+    option (google.api.http) = {
+      get: "/api/official_site/oauth/ping/{name}"
+    };
+  }
+
+  // OSAuthBegin redirects to login with http.StatusTemporaryRedirect.
+  // This function will set cookie `_gothic_session` to mark Oauth authentication start.
+  rpc OSAuthBegin(OSAuthBeginRequest) returns(OSAuthBeginResponse) {
+    option (google.api.http) = {
+      get: "/api/official_site/oauth/{provider}"
+    };
+  }
+
+  // OSAuthRedirectUrl returns the OAuth authorization url (SeaTalk) whose param redirect uri is OSAuthCallback (OA).
+  // This function will set cookie `_gothic_session` to mark Oauth authentication start.
+  rpc OSAuthRedirectUrl(OSAuthRedirectUrlRequest) returns(OSAuthRedirectUrlResponse) {
+    option (google.api.http) = {
+      get: "/api/official_site/oauth/{provider}/url"
+    };
+  }
+
+  // OSAuthCallback is used for the callback after successful OAuth authentication.
+  // This function will update cookie `_gothic_session` to mark OAuth authentication finish.
+  // At the same time, this function will set cookie `_seatalk_staff_session` for OA access.
+  rpc OSAuthCallback(OSAuthCallbackRequest) returns(OSAuthCallbackResponse) {
+    option (google.api.http) = {
+      get: "/api/official_site/oauth/{provider}/callback"
+    };
+  }
+
+  // OSAuthHasCompany is used to check if a user has active company in OA.
+  rpc OSAuthHasCompany(OSAuthHasCompanyRequest) returns(OSAuthHasCompanyResponse) {
+    option (google.api.http) = {
+      get: "/api/official_site/has_company"
+    };
+  }
+}
+
+// OAAuthLoginService defines the functions related to scan code login service of SeaTalk OA.
+service OAOAuthLoginService {
+
+  // OAAuthBegin redirects to login with http.StatusTemporaryRedirect.
+  // This function will set cookie `_gothic_session` to mark Oauth authentication start.
+  rpc OAAuthBegin(OAAuthBeginRequest) returns(OAAuthBeginResponse) {
+    option (google.api.http) = {
+      get: "/api/oauth/{provider}"
+    };
+  }
+
+  // OAAuthRedirectUrl returns the OAuth authorization url (SeaTalk) whose param redirect uri is OSAuthCallback (OA).
+  // This function will set cookie `_gothic_session` to mark Oauth authentication start.
+  rpc OAAuthRedirectUrl(OAAuthRedirectUrlRequest) returns(OAAuthRedirectUrlResponse) {
+    option (google.api.http) = {
+      get: "/api/oauth/{provider}/url"
+    };
+  }
+
+  // OAAuthCallback is used for the callback after successful OAuth authentication.
+  // This function will update cookie `_gothic_session` to mark OAuth authentication finish.
+  // At the same time, this function will set cookie `_seatalk_staff_session` for OA access.
+  rpc OAAuthCallback(OAAuthCallbackRequest) returns(OAAuthCallbackResponse) {
+    option (google.api.http) = {
+      get: "/api/oauth/{provider}/callback"
+    };
+  }
+
+}
+
+// PingRequest defines the structure of a ping request.
+// This request is used to test the service link connectivity of grpc gateway and grpc service.
+message PingRequest {
+  string name = 1;
+}
+
+// PongResponse defines the structure of a pong response.
+// This response indicates that the service link is healthy.
+message PongResponse {
+  string reply = 1;
+}
+
+// OSAuthBeginRequest defines the structure of SeaTalk official site authentication beginning request.
+message OSAuthBeginRequest {
+  string provider = 1;
+  string company_name = 2;
+  int64  language_id = 3;
+  int64 location_id = 4;
+  int64  hq_location_id = 5;
+  string email = 6;
+  string phone = 7;
+  int64 application_id = 8;
+}
+
+// OSAuthBeginResponse defines the structure of SeaTalk official site authentication beginning response.
+message OSAuthBeginResponse {
+}
+
+// OSAuthRedirectUrlRequest defines the structure of SeaTalk official site authentication redirect url request.
+message OSAuthRedirectUrlRequest {
+  string provider = 1;
+  string company_name = 2;
+  int64  language_id = 3;
+  int64 location_id = 4;
+  int64  hq_location_id = 5;
+  string email = 6;
+  string phone = 7;
+  int64 application_id = 8;
+}
+
+// OSAuthRedirectUrlResponse defines the structure of SeaTalk official site authentication redirect url request.
+message OSAuthRedirectUrlResponse {
+  int32 error = 1;
+  string error_message = 2;
+  string _request_id = 3;
+  string login_url = 4;
+}
+
+// OSAuthCallbackRequest defines the structure of SeaTalk official site authentication callback request.
+message OSAuthCallbackRequest {
+  string provider = 1;
+  string code = 2;
+  string state = 3;
+}
+
+// OSAuthCallbackResponse defines the structure of SeaTalk official site authentication callback request.
+message OSAuthCallbackResponse {
+}
+
+// OSAuthHasCompanyRequest defines the structure of request to check if a user has company in after SeaTalk official site authentication callback.
+message OSAuthHasCompanyRequest {
+}
+
+// OSAuthHasCompanyResponse defines the structure of response to check if a user has company in after SeaTalk official site authentication callback.
+message OSAuthHasCompanyResponse {
+  int32 error = 1;
+  string error_message = 2;
+  string _request_id = 3;
+  bool has_company = 4;
+}
+
+// OAAuthBeginRequest defines the structure of response to check if a user has company in after SeaTalk official site authentication callback..
+message OAAuthBeginRequest {
+  string provider = 1;
+  string language = 2;
+  string organization_code = 3;
+}
+
+// OAAuthBeginResponse defines the structure of SeaTalk OA authentication beginning response.
+message OAAuthBeginResponse {
+}
+
+// OAAuthRedirectUrlRequest defines the structure of SeaTalk OA authentication redirect url request.
+message OAAuthRedirectUrlRequest {
+  string provider = 1;
+  string language = 2;
+  string organization_code = 3;
+}
+
+// OAAuthRedirectUrlResponse defines the structure of SeaTalk OA authentication redirect url request.
+message OAAuthRedirectUrlResponse {
+  int32 error = 1;
+  string error_message = 2;
+  string _request_id = 3;
+  string login_url = 4;
+}
+
+// OAAuthCallbackRequest defines the structure of SeaTalk OA authentication callback request.
+message OAAuthCallbackRequest {
+  string provider = 1;
+  string code = 2;
+  string state = 3;
+}
+
+// OAAuthCallbackResponse defines the structure of SeaTalk OA authentication callback request.
+message OAAuthCallbackResponse {
+}

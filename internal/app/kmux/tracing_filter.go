@@ -1,4 +1,4 @@
-package toolkit
+package kmux
 
 import (
 	"context"

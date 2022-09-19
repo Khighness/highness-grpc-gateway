@@ -13,12 +13,12 @@ import (
 // @Email  zikang.chen@shopee.com
 // @Since  2022-09-08
 
-func Recovery(writer http.ResponseWriter, request *http.Request, next func(http.ResponseWriter, *http.Request)) {
+func Recovering(writer http.ResponseWriter, request *http.Request, next func(http.ResponseWriter, *http.Request)) {
 	defer func() {
 		logger := kctx.GetLogger(request.Context())
-		logger.Info("[MIDDLEWARE-Recovery]")
+		logger.Info("[MIDDLEWARE-Recovering]")
 		if p := recover(); p != nil {
-			logger.Error("[MIDDLEWARE-Recovery]", zap.Error(fmt.Errorf("%v", p)))
+			logger.Error("[MIDDLEWARE-Recovering]", zap.Error(fmt.Errorf("%v", p)))
 			writer.Header().Set("Content-Type", "application/json")
 			writer.WriteHeader(http.StatusInternalServerError)
 			b, _ := json.Marshal(map[string]interface{}{

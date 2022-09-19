@@ -2,9 +2,13 @@ package hello
 
 import (
 	"context"
+	"errors"
 	"fmt"
-	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 	"time"
+
+	"go.uber.org/zap"
 
 	"highness-grpc-gateway/proto/api"
 )
@@ -22,18 +26,29 @@ func NewHelloServer() api.HelloServiceServer {
 }
 
 func (s *helloServer) SayHello(ctx context.Context, in *api.HelloRequest) (*api.HelloResponse, error) {
+	period, err := s.GetPeriod(in.GetTimestamp())
+	if err != nil {
+		return nil, err
+	}
 	fullName := fmt.Sprintf("%s·%s", in.GetFirstName(), in.GetLastName())
 	zap.L().Info("[SayHello]", zap.String("name", fullName))
-	return &api.HelloResponse{ReplyMessage: fmt.Sprintf("%s好, %s", s.GetPeriod(in.GetTimestamp()), fullName)}, nil
+	return &api.HelloResponse{ReplyMessage: fmt.Sprintf("%s好, %s", period, fullName)}, nil
 }
 
 func (s *helloServer) SayHelloV2(ctx context.Context, in *api.HelloRequest) (*api.HelloResponse, error) {
+	period, err := s.GetPeriod(in.GetTimestamp())
+	if err != nil {
+		return nil, err
+	}
 	fullName := fmt.Sprintf("%s·%s", in.GetFirstName(), in.GetLastName())
 	zap.L().Info("[SayHelloV2]", zap.String("name", fullName))
-	return &api.HelloResponse{ReplyMessage: fmt.Sprintf("%s好, %s", s.GetPeriod(in.GetTimestamp()), fullName)}, nil
+	return &api.HelloResponse{ReplyMessage: fmt.Sprintf("%s好, %s", period, fullName)}, nil
 }
 
 func (s *helloServer) SayGoodBye(ctx context.Context, in *api.ByeRequest) (*api.ByeResponse, error) {
+	meta := metadata.Pairs("K1", "V1")
+	grpc.SetTrailer(ctx, meta)
+
 	fullName := fmt.Sprintf("%s·%s", in.GetFirstName(), in.GetLastName())
 	zap.L().Info("[SayGoodBye]", zap.String("name", fullName))
 	return &api.ByeResponse{
@@ -41,9 +56,9 @@ func (s *helloServer) SayGoodBye(ctx context.Context, in *api.ByeRequest) (*api.
 	}, nil
 }
 
-func (s *helloServer) GetPeriod(timestamp int64) string {
+func (s *helloServer) GetPeriod(timestamp int64) (string, error) {
 	if timestamp < 1e9 || timestamp > 1e10 {
-		return "错误的时间"
+		return "", errors.New("invalid timestamp")
 	}
 	hour := time.Unix(timestamp, 0).Hour()
 	period := ""
@@ -56,5 +71,5 @@ func (s *helloServer) GetPeriod(timestamp int64) string {
 	} else {
 		period = "晚上"
 	}
-	return period
+	return period, nil
 }

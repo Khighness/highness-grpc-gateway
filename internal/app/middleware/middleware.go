@@ -11,11 +11,11 @@ import (
 
 type Middleware func(http.ResponseWriter, *http.Request, func(http.ResponseWriter, *http.Request))
 
-func Middlewares() []Middleware {
+func DefaultMiddlewares() []Middleware {
 	return []Middleware{
 		Opentracing,
 		Logging,
-		Recovery,
+		Recovering,
 	}
 }
 

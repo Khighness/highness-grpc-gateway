@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 	"go.uber.org/zap/zapcore"
+	"highness-grpc-gateway/internal/app/kgrpc"
+	"highness-grpc-gateway/internal/app/kmux"
 	"highness-grpc-gateway/internal/app/middleware"
-	toolkit "highness-grpc-gateway/internal/app/toolkit"
 	"highness-grpc-gateway/internal/pkg/logging"
 	"log"
 	"net/http"
@@ -31,21 +32,21 @@ func main() {
 
 	// dial to grpc service
 	grpcAddr := fmt.Sprintf("0.0.0.0:%d", *config.GRPC_PORT)
-	conn, err := grpc.DialContext(context.Background(), grpcAddr,
-		grpc.WithBlock(), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.DialContext(
+		context.Background(),
+		grpcAddr,
+		grpc.WithBlock(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithUnaryInterceptor(kgrpc.MetaClientInterceptor),
+		grpc.WithStreamInterceptor(kgrpc.MetaClientStreamInterceptor),
+	)
 	if err != nil {
 		zap.L().Fatal("Failed to dial grpc service ", zap.Error(err))
 	}
 
 	// create http mux
-	gatewayMux := runtime.NewServeMux(
-		runtime.WithMetadata(toolkit.RequestMetaHandler),
-		runtime.WithRoutingErrorHandler(toolkit.ErrorRoutingHandler),
-		runtime.WithForwardResponseOption(toolkit.TracingFilter),
-		runtime.WithForwardResponseOption(toolkit.CookieFilter),
-		runtime.WithForwardResponseOption(toolkit.RedirectFilter),
-	)
-	handler := middleware.WithMiddleWares(gatewayMux, middleware.Middlewares()...)
+	gatewayMux := runtime.NewServeMux(kmux.DefaultServeMuxOptions()...)
+	handler := middleware.WithMiddleWares(gatewayMux, middleware.DefaultMiddlewares()...)
 
 	// register service into gateway mux
 	err = api.RegisterHelloServiceHandler(context.Background(), gatewayMux, conn)
